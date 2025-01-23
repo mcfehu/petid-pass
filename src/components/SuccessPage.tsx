@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSearchParams, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { CheckCircle, Mail } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { Header } from './Header';
 
 export function SuccessPage() {
   const [searchParams] = useSearchParams();
@@ -10,8 +11,15 @@ export function SuccessPage() {
   const sessionId = searchParams.get('session_id');
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    console.log('Success Page Mounted');
+    console.log('Session ID:', sessionId);
+    console.log('Current Step:', step);
+  }, [sessionId, step]);
+
   // Redirect if no session ID
   if (!sessionId) {
+    console.log('No session ID found, redirecting to home');
     return <Navigate to="/" replace />;
   }
 
@@ -33,7 +41,7 @@ export function SuccessPage() {
     setLoading(true);
     
     try {
-      // Send notification email to admin (implement your email service)
+      console.log('Submitting form data:', formData);
       console.info('New customer submission:', {
         ...formData,
         sessionId
@@ -51,30 +59,33 @@ export function SuccessPage() {
 
   if (step === 2) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-        <div className="max-w-md w-full">
-          <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 text-center">
-            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-[#008080]/10 mb-4">
-              <Mail className="h-6 w-6 text-[#008080]" />
+      <div className="min-h-screen bg-gradient-to-b from-[#F5F5DC] via-white to-[#F5F5DC]">
+        <Header />
+        <div className="pt-24 flex items-center justify-center px-4">
+          <div className="max-w-md w-full">
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-8 border border-[#008080]/10 hover:shadow-xl transition-shadow duration-300 text-center">
+              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-[#008080]/10 mb-4">
+                <Mail className="h-6 w-6 text-[#008080]" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Thank You!</h2>
+              <p className="text-gray-600 mb-6">
+                Your information has been received. We'll process your details and send your PetID Pass kit shortly.
+              </p>
+              <div className="bg-[#F5F5DC]/50 p-4 rounded-md text-sm text-gray-600 mb-6">
+                <p>Please check your email for:</p>
+                <ul className="list-disc list-inside mt-2">
+                  <li>Order confirmation</li>
+                  <li>Shipping updates</li>
+                  <li>Setup instructions</li>
+                </ul>
+              </div>
+              <a
+                href="/"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-[#008080] hover:bg-[#006666] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#008080] transition-colors duration-200"
+              >
+                Return Home
+              </a>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Thank You!</h2>
-            <p className="text-gray-600 mb-6">
-              Your information has been received. We'll process your details and send your PetID Pass kit shortly.
-            </p>
-            <div className="bg-gray-50 p-4 rounded-md text-sm text-gray-600 mb-6">
-              <p>Please check your email for:</p>
-              <ul className="list-disc list-inside mt-2">
-                <li>Order confirmation</li>
-                <li>Shipping updates</li>
-                <li>Setup instructions</li>
-              </ul>
-            </div>
-            <a
-              href="/"
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-[#008080] hover:bg-[#006666] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#008080]"
-            >
-              Return Home
-            </a>
           </div>
         </div>
       </div>
@@ -82,9 +93,10 @@ export function SuccessPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-[#F5F5DC] via-white to-[#F5F5DC]">
+      <Header />
       <Toaster position="top-right" />
-      <div className="max-w-md mx-auto">
+      <div className="max-w-md mx-auto pt-24 px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
           <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-[#008080]/10 mb-4">
             <CheckCircle className="h-6 w-6 text-[#008080]" />
@@ -95,7 +107,7 @@ export function SuccessPage() {
           </p>
         </div>
 
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-8 border border-[#008080]/10 hover:shadow-xl transition-shadow duration-300 mb-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-6">
               <h3 className="text-lg font-medium text-gray-900">Owner Information</h3>
@@ -250,7 +262,7 @@ export function SuccessPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#008080] hover:bg-[#006666] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#008080] disabled:opacity-50"
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#008080] hover:bg-[#006666] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#008080] disabled:opacity-50 transition-colors duration-200"
             >
               {loading ? 'Submitting...' : 'Submit Information'}
             </button>
